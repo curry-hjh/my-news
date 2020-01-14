@@ -10,7 +10,7 @@
       <input type="text" class="name" placeholder="用户名/手机号码" />
       <input type="password" class="password" placeholder="密码" />
     </div>
-    <button class="loginbtn" @click="login">登录</button>
+    <button class="loginbtn" @click="login">登</button>
   </div>
 </template>
 
