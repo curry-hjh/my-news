@@ -1,5 +1,5 @@
 <template>
-  <div class="login">
+  <div class="register">
     <div class="close">
       <i class="iconfont iconicon-test"></i>
     </div>
@@ -15,6 +15,15 @@
         err-msg="输入的用户名格式错误"
       ></hm-input>
     </div>
+    <div class="nickname">
+      <!-- <hm-input placeholder="请输入用户名" v-model="username"></hm-input> -->
+      <hm-input
+        placeholder="请输入昵称"
+        v-model="nickname"
+        :rules="/^1\d{4,10}$/"
+        err-msg="输入的昵称格式错误"
+      ></hm-input>
+    </div>
     <div class="password">
       <hm-input
         type="password"
@@ -25,12 +34,8 @@
       ></hm-input>
     </div>
     <div class="btn">
-      <hm-button @click="login">登录</hm-button>
+      <hm-button @click="register">注册</hm-button>
     </div>
-    <div class="register">
-      没有账号？ 点击 <span @click="toregister">注册</span>
-    </div>
-    <button class="loginbtn" @click="login">登</button>
   </div>
 </template>
 
@@ -42,7 +47,8 @@ export default {
   data () {
     return {
       username: '',
-      password: ''
+      password: '',
+      nickname: ''
     }
   },
   components: {
@@ -50,33 +56,33 @@ export default {
     HmButton
   },
   methods: {
-    async login () {
+    async register () {
       // console.log('登录了吗')
-      if (!this.username || !this.password) {
-        alert('用户名或者密码输入为空！')
+      if (!this.username || !this.password || !this.nickname) {
+        alert('输入不能为空！')
         return
       }
-
       // 发送ajax请求
-      const res = await axios.post('http://localhost:3000/login', {
+      const res = await axios.post('http://localhost:3000/register', {
         username: this.username,
-        password: this.password
+        password: this.password,
+        nickname: this.nickname
       })
       if (res.data.statusCode === 401) {
-        alert('用户名或者密码错误')
+        alert('服务器繁忙，请重试')
       } else {
-        alert('登录成功')
+        await alert('注册成功')
+        this.$router.push({
+          path: '/'
+        })
       }
-    },
-    toregister () {
-      this.$emit('toregister')
     }
   }
 }
 </script>
 
 <style lang="less" scoped>
-.login {
+.register {
   padding: 20px;
   .close {
     i {
@@ -92,12 +98,6 @@ export default {
   }
   .btn {
     margin-top: 20px;
-  }
-  .register {
-    padding-left: 180px;
-    span {
-      color: #d81e06;
-    }
   }
 }
 </style>

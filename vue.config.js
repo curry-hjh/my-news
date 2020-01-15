@@ -4,5 +4,17 @@ module.exports = {
   devServer: {
     port: 8888,
     open: true
+  },
+  css: {
+    loaderOptions: {
+      css: {},
+      postcss: {
+        plugins: [
+          require('postcss-px2rem')({
+            remUnit: 36
+          })
+        ]
+      }
+    }
   }
 }
