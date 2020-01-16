@@ -1,6 +1,6 @@
 <template>
   <div class="login">
-    <div class="close">
+    <div class="close"  @click="$router.go(-1)">
       <i class="iconfont iconicon-test"></i>
     </div>
     <div class="logo">
@@ -30,14 +30,10 @@
     <div class="register">
       没有账号？ 点击 <span @click="toregister">注册</span>
     </div>
-    <button class="loginbtn" @click="login">登</button>
   </div>
 </template>
 
 <script>
-import HmInput from '../components/HmInput'
-import HmButton from '../components/HmButton'
-import axios from 'axios'
 export default {
   data () {
     return {
@@ -45,9 +41,11 @@ export default {
       password: ''
     }
   },
-  components: {
-    HmInput,
-    HmButton
+  created () {
+    // console.log(this.$route)
+    const { username, password } = this.$route.params
+    this.username = username
+    this.password = password
   },
   methods: {
     async login () {
@@ -58,18 +56,25 @@ export default {
       }
 
       // 发送ajax请求
-      const res = await axios.post('http://localhost:3000/login', {
+      const res = await this.$axios.post('/login', {
         username: this.username,
         password: this.password
       })
       if (res.data.statusCode === 401) {
         alert('用户名或者密码错误')
       } else {
-        alert('登录成功')
+        console.log(res)
+        const { token, user } = res.data.data
+        localStorage.setItem('token', token)
+        localStorage.setItem('user_id', user.id)
+        this.$toast.success('登录成功')
+        this.$router.push('/home')
       }
     },
     toregister () {
-      this.$emit('toregister')
+      this.$router.push({
+        path: '/register'
+      })
     }
   }
 }

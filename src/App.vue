@@ -1,19 +1,12 @@
 <template>
   <div id="app">
-    <router-view @toregister="toregister"></router-view>
+    <router-view></router-view>
   </div>
 </template>
 
 <script>
 /* eslint-disable */
 export default {
-  methods: {
-    toregister() {
-      this.$router.push({
-        path: "/register",
-      });
-    }
-  }
 };
 </script>
 

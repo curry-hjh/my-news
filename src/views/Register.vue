@@ -10,7 +10,7 @@
       <!-- <hm-input placeholder="请输入用户名" v-model="username"></hm-input> -->
       <hm-input
         placeholder="请输入用户名"
-        v-model="username"
+        v-model="form.username"
         :rules="/^1\d{4,10}$/"
         err-msg="输入的用户名格式错误"
       ></hm-input>
@@ -19,16 +19,16 @@
       <!-- <hm-input placeholder="请输入用户名" v-model="username"></hm-input> -->
       <hm-input
         placeholder="请输入昵称"
-        v-model="nickname"
-        :rules="/^1\d{4,10}$/"
-        err-msg="输入的昵称格式错误"
+        v-model="form.nickname"
+        :rules="/^[\u4e00-\u9fa5]{3,8}$/"
+        err-msg="昵称请输入3-8位中文"
       ></hm-input>
     </div>
     <div class="password">
       <hm-input
         type="password"
         placeholder="请输入密码"
-        v-model="password"
+        v-model="form.password"
         :rules="/^\d{3,12}$/"
         err-msg="你输入的密码格式有误"
       ></hm-input>
@@ -40,40 +40,37 @@
 </template>
 
 <script>
-import HmInput from '../components/HmInput'
-import HmButton from '../components/HmButton'
-import axios from 'axios'
+
 export default {
   data () {
     return {
-      username: '',
-      password: '',
-      nickname: ''
+      form: {
+        username: '',
+        password: '',
+        nickname: ''
+      }
     }
-  },
-  components: {
-    HmInput,
-    HmButton
   },
   methods: {
     async register () {
       // console.log('登录了吗')
-      if (!this.username || !this.password || !this.nickname) {
+      if (!this.form.username || !this.form.password || !this.form.nickname) {
         alert('输入不能为空！')
         return
       }
       // 发送ajax请求
-      const res = await axios.post('http://localhost:3000/register', {
-        username: this.username,
-        password: this.password,
-        nickname: this.nickname
-      })
-      if (res.data.statusCode === 401) {
-        alert('服务器繁忙，请重试')
+      const res = await this.$axios.post('http://localhost:3000/register', this.form)
+      if (res.data.statusCode === 400) {
+        alert('用户名已经存在')
       } else {
         await alert('注册成功')
         this.$router.push({
-          path: '/'
+          path: '/login',
+          name: 'login',
+          params: {
+            username: this.form.username,
+            password: this.form.password
+          }
         })
       }
     }

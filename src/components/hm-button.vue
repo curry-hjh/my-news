@@ -1,4 +1,4 @@
-<template>
+background-color: rgba(153, 153, 153, 0.2);<template>
   <div class="btn" @click='handleClick'><slot></slot></div>
 </template>
 
